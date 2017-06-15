@@ -20,26 +20,28 @@ class Helper
      */
     public static function configureAcl()
     {
-        $groupCodesOfCurrentUser = self::getGroupCodesOfCurrentUser();
+        $userId = (intval((new \CUser())->GetID()) ?: 0);
+        $roleCodesOfUser = self::getRoleCodesOfUser($userId);
         $config = Configuration::getValue('acl');
         $settings = Configuration::getValue('acl-settings');
 
-        Storage::set(new Acl(new Context($groupCodesOfCurrentUser, $config), $settings));
+        Storage::set(new Acl(new Context($roleCodesOfUser, $config), $settings));
     }
 
 
     /**
      * Получить список кодов групп текущего пользователя
+     * @param int $userId
      * @return array
      * @throws UserRolesOperationException
      */
-    public static function getGroupCodesOfCurrentUser()
+    public static function getRoleCodesOfUser($userId)
     {
-        $userId = (new \CUser())->GetID();
+
         $userGroups = [];
         $guestGroupCode = Configuration::getValue('acl')['guestGroupCode'];
 
-        if ($userId === null) {
+        if ($userId === 0) {
             $userGroups[] = (null === $guestGroupCode) ? 'everyone' : $guestGroupCode;
 
             return $userGroups;

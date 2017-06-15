@@ -33,7 +33,7 @@ class Context
     function __construct($userRoles, $configuration)
     {
         foreach ($userRoles as $role) {
-            if(!is_string($role) || !is_array($role)){
+            if(!is_string($role) && !is_array($role)){
                 continue;
             }
 
