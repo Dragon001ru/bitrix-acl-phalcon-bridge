@@ -8,6 +8,8 @@
 
 namespace UW\Acl;
 
+use UW\Acl\Exceptions\AclNotInitializedException;
+
 /**
  * Хранилище для сохрения получения доступа к объекту Acl
  *
@@ -25,10 +27,15 @@ class Storage
 
     /**
      * @return Acl
+     * @throws AclNotInitializedException
      */
     public static function get()
     {
-        return self::$acl;
+        if(self::$acl instanceof Acl){
+            return self::$acl;
+        }
+
+        throw new AclNotInitializedException('Объект ACL не был инициализирован.');
     }
 
     /**

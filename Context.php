@@ -8,6 +8,8 @@
 
 namespace UW\Acl;
 
+use UW\Acl\Exceptions\BadConfigurationException;
+
 
 /**
  * Содержит информацию о контексте, в рамках которого должен работать ACL
@@ -30,8 +32,18 @@ class Context
 
     function __construct($userRoles, $configuration)
     {
-        //todo валидировать данные
-        $this->userRoles = $userRoles;
+        foreach ($userRoles as $role) {
+            if(!is_string($role) || !is_array($role)){
+                continue;
+            }
+
+            $this->userRoles[] = $role;
+        }
+
+        if(!is_array($configuration) || empty($configuration)){
+            throw new BadConfigurationException('Не корректная конфигурация ACL');
+        }
+
         $this->configuration = $configuration;
     }
 

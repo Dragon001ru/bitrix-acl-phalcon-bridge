@@ -9,11 +9,14 @@
 namespace UW\Acl;
 
 
+use UW\Acl\Exceptions\CombinatorStrategyNotFoundException;
+
 class StrategyFactory
 {
     /**
      * @param $strategyCode
      * @return StrategyInterface
+     * @throws CombinatorStrategyNotFoundException
      */
     public static function build($strategyCode)
     {
@@ -33,7 +36,7 @@ class StrategyFactory
                 $class = $nameSpace . '\\' . $fileInfo['filename'];
 
                 if (!class_exists($class)) {
-                    //todo Err
+                    throw new CombinatorStrategyNotFoundException(sprintf('Класс %s не найден.', $class));
 
                     continue;
                 }
@@ -47,6 +50,6 @@ class StrategyFactory
             }
         }
 
-        //todo Err
+        throw new CombinatorStrategyNotFoundException(sprintf('Не удалось найти стратегию с указанным кодом: %s.', $strategyCode));
     }
 }

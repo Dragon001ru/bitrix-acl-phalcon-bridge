@@ -10,6 +10,7 @@ namespace UW\Acl;
 
 
 use Bitrix\Main\Config\Configuration;
+use UW\Acl\Exceptions\UserRolesOperationException;
 
 class Helper
 {
@@ -30,6 +31,7 @@ class Helper
     /**
      * Получить список кодов групп текущего пользователя
      * @return array
+     * @throws UserRolesOperationException
      */
     public static function getGroupCodesOfCurrentUser()
     {
@@ -43,13 +45,18 @@ class Helper
             return $userGroups;
         }
 
-        $rsUserGroups = \CUser::GetUserGroupEx($userId);
+        try{
+            $rsUserGroups = \CUser::GetUserGroupEx($userId);
 
-        while ($userGroup = $rsUserGroups->Fetch()) {
-            if (!empty($userGroup['STRING_ID']) && null != $userGroup['STRING_ID']) {
-                $userGroups[] = $userGroup['STRING_ID'];
+            while ($userGroup = $rsUserGroups->Fetch()) {
+                if (!empty($userGroup['STRING_ID']) && null != $userGroup['STRING_ID']) {
+                    $userGroups[] = $userGroup['STRING_ID'];
+                }
             }
+        } catch (\Exception $e) {
+            throw new UserRolesOperationException('Ошибка при получении ролей пользователя', 0, $e);
         }
+
 
 
         return $userGroups;
