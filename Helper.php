@@ -23,15 +23,7 @@ class Helper
         $config = Configuration::getValue('acl');
         $settings = Configuration::getValue('acl-settings');
 
-        AclStorage::set(new Acl(new Context($groupCodesOfCurrentUser, $config), $settings));
-    }
-
-    /**
-     * Очистить кеш, используемый для ACL
-     */
-    public static function clearAclCache()
-    {
-
+        Storage::set(new Acl(new Context($groupCodesOfCurrentUser, $config), $settings));
     }
 
 

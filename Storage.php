@@ -16,7 +16,7 @@ namespace UW\Acl;
  * Class AclStorage
  * @package UW\Acl
  */
-class AclStorage
+class Storage
 {
     /**
      * @var Acl
