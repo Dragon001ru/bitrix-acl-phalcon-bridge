@@ -38,66 +38,67 @@
 
 | Ключ | Описание  | Допустипые значения
 |---|---|---|
+| guestRoleCode  | Код роли для неавторизованных пользователей. | Строка. Если параметр не установлен, то по умолчению задается код - "**everyone**" |
 | defaultAction  | Действие по умолчанию, если не задано правило. | **deny/allow** - запретить/разрешить доступ |
 | combineStrategy  | Стратегия для разрешения конфликтов, возникающих при наследовании прав | And/Or/Xor |
 | availableRoles  | Доступные роли | Массив кодов ролей ``['role1', 'role2']``. Допускается наследование ролей ``['role1', ['role2', 'role1']]``|
 | availableResources  | Доступные ресурсы | Массив ресурсов ``['resourceName' => ['operation1', 'operation2']]`` |
-| rights  | Отношения между ролями, ресураси и их операциями | Массив прав ``['кщду' => ['operation1', 'operation2']]`` |
+| rights  | Отношения между ролями, ресураси и их операциями | Массив прав ``['role' => ['operation1', 'operation2']]`` |
 
 
 Пример конфигурационного файла
 
 ````
 'acl-settings' => [
-        'value' => [
-            'configuration-cache-time' => 60,
-            'configuration-cache-folder' => 'acl-config'
-        ]
-    ],
-    'acl' => [
-        'value' => [
-            'defaultAction' => 'deny',
-            'combineStrategy' => 'Or',
-            'availableRoles' => ['ownGroup', 'administrators'],
-            'availableResources' => [
-                'request' => [
-                    'create',
-                    'edit',
-                    'delete',
-                    'changeStatus'
-                ],
-                'message' => [
-                    'create',
-                    'read',
-                    'edit'
-                ]
+    'value' => [
+        'configuration-cache-time' => 60,
+        'configuration-cache-folder' => 'acl-config'
+    ]
+],
+'acl' => [
+    'value' => [
+        'defaultAction' => 'deny',
+        'combineStrategy' => 'Or',
+        'availableRoles' => ['ownGroup', 'administrators'],
+        'availableResources' => [
+            'request' => [
+                'create',
+                'edit',
+                'delete',
+                'changeStatus'
             ],
-            'rights' => [
-                'administrators' => [
-                    [
-                        'access'   => 'allow',
-                        'resource' => [
-                            'name'    => 'request',
-                            'actions' => [
-                                'edit',
-                                'delete',
+            'message' => [
+                'create',
+                'read',
+                'edit'
+            ]
+        ],
+        'rights' => [
+            'administrators' => [
+                [
+                    'access'   => 'allow',
+                    'resource' => [
+                        'name'    => 'request',
+                        'actions' => [
+                            'edit',
+                            'delete',
 
-                            ]
                         ]
                     ]
-                ],
-                'ownGroup' => [
-                    [
-                        'access'   => 'deny',
-                        'resource' => [
-                            'name'    => 'message',
-                            'actions' => '*'
-                        ]
+                ]
+            ],
+            'ownGroup' => [
+                [
+                    'access'   => 'deny',
+                    'resource' => [
+                        'name'    => 'message',
+                        'actions' => '*'
                     ]
                 ]
             ]
         ]
     ]
+]
 ````
 
 Использование

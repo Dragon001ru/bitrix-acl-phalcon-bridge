@@ -35,9 +35,12 @@ class Helper
     {
         $userId = (new \CUser())->GetID();
         $userGroups = [];
+        $guestGroupCode = Configuration::getValue('acl')['guestGroupCode'];
 
         if ($userId === null) {
-            //todo err
+            $userGroups[] = (null === $guestGroupCode) ? 'everyone' : $guestGroupCode;
+
+            return $userGroups;
         }
 
         $rsUserGroups = \CUser::GetUserGroupEx($userId);
