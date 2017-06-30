@@ -1,13 +1,6 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: agr
- * Date: 14.06.2017
- * Time: 11:07
- */
+<?
 
 namespace UW\Acl;
-
 
 use Bitrix\Main\Config\Configuration;
 use UW\Acl\Exceptions\UserRolesOperationException;
@@ -28,7 +21,6 @@ class Helper
         Storage::set(new Acl(new Context($roleCodesOfUser, $config), $settings));
     }
 
-
     /**
      * Получить список кодов групп текущего пользователя
      * @param int $userId
@@ -37,7 +29,6 @@ class Helper
      */
     public static function getRoleCodesOfUser($userId)
     {
-
         $userGroups = [];
         $guestGroupCode = Configuration::getValue('acl')['guestGroupCode'];
 
@@ -47,19 +38,17 @@ class Helper
             return $userGroups;
         }
 
-        try{
+        try {
             $rsUserGroups = \CUser::GetUserGroupEx($userId);
 
             while ($userGroup = $rsUserGroups->Fetch()) {
-                if (!empty($userGroup['STRING_ID']) && null != $userGroup['STRING_ID']) {
+                if (!empty($userGroup['STRING_ID']) && $userGroup['STRING_ID'] !== 'everyone') {
                     $userGroups[] = $userGroup['STRING_ID'];
                 }
             }
         } catch (\Exception $e) {
             throw new UserRolesOperationException('Ошибка при получении ролей пользователя', 0, $e);
         }
-
-
 
         return $userGroups;
     }
