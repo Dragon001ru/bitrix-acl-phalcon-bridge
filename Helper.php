@@ -10,27 +10,29 @@ class Helper
 
     /**
      * Обработчик события ядра Бтрикса
+     * @param IConfiguration $configuration
      */
-    public static function configureAcl()
+    public static function configureAcl(IConfiguration $configuration)
     {
         $userId = (intval((new \CUser())->GetID()) ?: 0);
-        $roleCodesOfUser = self::getRoleCodesOfUser($userId);
-        $config = Configuration::getValue('acl');
-        $settings = Configuration::getValue('acl-settings');
+        $roleCodesOfUser = self::getRoleCodesOfUser($userId, $configuration);
+        $contextConfiguration = $configuration->get('acl');
+        $settings = $configuration->get('acl-settings');
 
-        Storage::set(new Acl(new Context($roleCodesOfUser, $config), $settings));
+        Storage::set(new Acl(new Context($roleCodesOfUser, $contextConfiguration), $settings));
     }
 
     /**
      * Получить список кодов групп текущего пользователя
      * @param int $userId
+     * @param IConfiguration $configuration
      * @return array
      * @throws UserRolesOperationException
      */
-    public static function getRoleCodesOfUser($userId)
+    public static function getRoleCodesOfUser($userId, IConfiguration $configuration)
     {
         $userGroups = [];
-        $guestGroupCode = Configuration::getValue('acl')['guestGroupCode'];
+        $guestGroupCode = $configuration->get('acl')['guestGroupCode'];
 
         if ($userId === 0) {
             $userGroups[] = (null === $guestGroupCode) ? 'everyone' : $guestGroupCode;
@@ -42,7 +44,7 @@ class Helper
             $rsUserGroups = \CUser::GetUserGroupEx($userId);
 
             while ($userGroup = $rsUserGroups->Fetch()) {
-                if (!empty($userGroup['STRING_ID']) && $userGroup['STRING_ID'] !== 'everyone') {
+                if (!empty($userGroup['STRING_ID']) && 'everyone' !== $userGroup['STRING_ID']) {
                     $userGroups[] = $userGroup['STRING_ID'];
                 }
             }
