@@ -14,7 +14,9 @@ class Helper
      */
     public static function configureAcl(IConfiguration $configuration)
     {
-        $userId = (intval((new \CUser())->GetID()) ?: 0);
+        global $USER;
+
+        $userId = intval($USER->GetID());
         $roleCodesOfUser = self::getRoleCodesOfUser($userId, $configuration);
         $contextConfiguration = $configuration->get('acl');
         $settings = $configuration->get('acl-settings');
