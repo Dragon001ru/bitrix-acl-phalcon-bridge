@@ -59,8 +59,8 @@ class Acl
             serialize($this->context->getAvailableResources()) .
             serialize($this->context->getAvailableRoles())
         );
-        $cacheTime = (empty($this->settings['configuration-cache-time']) ?: 3600);
-        $cacheFolder = (empty($this->settings['configuration-cache-folder'] ?: 'acl-cache'));
+        $cacheTime = (!empty($this->settings['configuration-cache-time']) ?$this->settings['configuration-cache-time']: 3600);
+        $cacheFolder = (!empty($this->settings['configuration-cache-folder']) ? $this->settings['configuration-cache-folder']: 'acl-cache'));
 
         if ($obCache->InitCache($cacheTime, 'acl_' . $cacheId, $cacheFolder)) {
 
@@ -123,7 +123,7 @@ class Acl
 
         $this->combinator = new Combinator();
         $this->phalconAcl = new PhalconAcl();
-        $this->settings = (is_array($settings) ?: []);
+        $this->settings = (is_array($settings) ?$settings: []);
 
         $this->configure();
     }
