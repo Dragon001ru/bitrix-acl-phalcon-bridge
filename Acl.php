@@ -60,7 +60,7 @@ class Acl
             serialize($this->context->getAvailableRoles())
         );
         $cacheTime = (!empty($this->settings['configuration-cache-time']) ?$this->settings['configuration-cache-time']: 3600);
-        $cacheFolder = (!empty($this->settings['configuration-cache-folder']) ? $this->settings['configuration-cache-folder']: 'acl-cache'));
+        $cacheFolder = (!empty($this->settings['configuration-cache-folder']) ? $this->settings['configuration-cache-folder']: 'acl-cache');
 
         if ($obCache->InitCache($cacheTime, 'acl_' . $cacheId, $cacheFolder)) {
 
